@@ -1,12 +1,5 @@
-import React from 'react';
-import './LoginPage.css';
+import "./LoginPage.css";
 
-
-export default function LoginPage(props){
-   
-
-    return (
-      <div>Login Pageeeeee</div>
-      );
+export default function LoginPage(props) {
+  return <div>Login Pageeeeee</div>;
 }
-
