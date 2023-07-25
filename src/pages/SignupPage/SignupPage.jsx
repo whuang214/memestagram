@@ -42,7 +42,6 @@ export default function SignupPage({ onSignupOrLogin }) {
   }
 
   function handleFileChange(info) {
-    console.log("info", info);
     // check if empty
     if (info.file.status === "removed") {
       setFile(null);
@@ -63,14 +62,24 @@ export default function SignupPage({ onSignupOrLogin }) {
   }
 
   async function handleSubmit(values) {
+    message.loading("Signing up...", 0);
+
+    const formData = new FormData();
+    for (let key in formObj) {
+      formData.append(key, formObj[key]);
+    }
+    if (file) {
+      formData.append("image", file);
+    }
     setLoading(true);
     console.log("Received values of form: ", values);
     try {
-      const user = await UserService.signup(formObj);
+      const user = await UserService.signup(formData);
       onSignupOrLogin();
       navigate("/");
     } catch (err) {
       console.log(err, "err in handlesubmit");
+      message.error(err.message);
       setError(err.message);
     }
     setLoading(false);
