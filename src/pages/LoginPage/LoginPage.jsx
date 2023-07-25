@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import UserService from "../../utils/userService";
 import "../LoginPage.css";
 
-export default function LoginPage() {
+export default function LoginPage({ onSignupOrLogin }) {
+  const navigate = useNavigate();
+
   const [formObj, setFormObj] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
@@ -18,9 +22,18 @@ export default function LoginPage() {
     }));
   }
 
-  function handleSubmit(values) {
+  async function handleSubmit(values) {
     setLoading(true);
     console.log("Received values of form: ", values);
+    try {
+      console.log("formObj->", formObj);
+      const user = await UserService.login(formObj);
+      onSignupOrLogin();
+      navigate("/");
+    } catch (err) {
+      console.log(err, "err in handlesubmit");
+      setError(err.message);
+    }
     setLoading(false);
   }
 
@@ -34,13 +47,13 @@ export default function LoginPage() {
           onFinish={handleSubmit}
         >
           <Form.Item
-            name="username"
-            rules={[{ required: true, message: "Please input your Username!" }]}
+            name="email"
+            rules={[{ required: true, message: "Please input your email!" }]}
           >
             <Input
-              name="username"
+              name="email"
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
               value={formObj.username}
               onChange={handleChange}
             />
