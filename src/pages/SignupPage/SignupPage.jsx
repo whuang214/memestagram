@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../../utils/userService";
-import { Form, Input, Button, Card, Upload, Avatar } from "antd";
+import { Form, Input, Button, Card, Upload, Avatar, message } from "antd";
 import {
   UserOutlined,
   MailOutlined,
   LockOutlined,
-  NumberOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
+import { set } from "mongoose";
 
 const { TextArea } = Input;
 
@@ -19,11 +20,40 @@ export default function SignupPage({ onSignupOrLogin }) {
     email: "",
     password: "",
     confirmPassword: "",
-    age: "",
-    bio: "",
   });
+  const [file, setFile] = useState(null); // for antd upload
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  function beforeUpload(file) {
+    // is the fie type an image?
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file types!");
+      return false;
+    }
+    // is the file size < 2mb?
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error("Image must be smaller than 2MB!");
+      return false;
+    }
+    return false; // added this to prevent upload b/c going to handle it manually
+  }
+
+  function handleFileChange(info) {
+    console.log("info", info);
+    // check if empty
+    if (info.file.status === "removed") {
+      setFile(null);
+      message.success(`file removed`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    } else {
+      setFile(info.file); // add the file to the fileList
+      message.success(`${info.file.name} sucessfully uploaded`);
+    }
+  }
 
   function handleChange(e) {
     setFormObj((prevFormObj) => ({
@@ -123,32 +153,17 @@ export default function SignupPage({ onSignupOrLogin }) {
               onChange={handleChange}
             />
           </Form.Item>
-          <Form.Item
-            name="age"
-            rules={[{ required: true, message: "Please input your Age!" }]}
-          >
-            <Input
-              name="age"
-              prefix={<NumberOutlined className="site-form-item-icon" />}
-              type="number"
-              placeholder="Age"
-              value={formObj.age}
-              onChange={handleChange}
-            />
+          <Form.Item label="Profile Image">
+            <Upload
+              name="image"
+              listType="picture"
+              beforeUpload={beforeUpload}
+              onChange={handleFileChange}
+              showUploadList={true}
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
           </Form.Item>
-          <Form.Item
-            name="bio"
-            rules={[{ required: true, message: "Please input your Bio!" }]}
-          >
-            <TextArea
-              name="bio"
-              placeholder="Bio"
-              rows={3}
-              value={formObj.bio}
-              onChange={handleChange}
-            />
-          </Form.Item>
-
           <Form.Item>
             <Button
               type="primary"
