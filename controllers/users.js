@@ -19,11 +19,12 @@ async function signup(req, res) {
   // if no file is uploaded, req.file will be undefined
   if (!req.file) return res.status(400).json({ msg: "Please upload a file" });
 
+  // create a new user object based on the user model from the database
+  const user = new User(req.body);
+
   // make the filepath unique by adding a uuid to the filename
   // TODO add user id folder to file path to make it unique
-  const filePath = `react-login/userImages/${uuidv4()}-${
-    req.file.originalname
-  }`;
+  const filePath = `memestagram/users/${user._id}/images/profile/${req.file.originalname}`;
 
   // create the object that we will send to S3
   const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
@@ -47,8 +48,8 @@ async function signup(req, res) {
     console.log("===============================");
 
     // create a new user object
-    const user = new User(req.body);
     try {
+      user.photoUrl = data.Location; // add the url of the image to the user object
       await user.save(); // save the user to the database
       const token = createJWT(user); // make a token for the user
       res.json({ token }); // send the token to the client

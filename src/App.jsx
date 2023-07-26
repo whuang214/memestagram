@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Feed user={user} />} />
+      <Route path="/*" element={<Feed user={user} />} />
     </Routes>
   );
 }
