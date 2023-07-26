@@ -1,32 +1,17 @@
 .feed-container {
   width: 100%;
-  max-width: 1200px; /* Adjusted the max-width to 1200px */
-  margin: 0 auto;
-  overflow-y: auto;
+  max-width: 800px;
+  margin-top: 2.5vmin;
   height: 93vh;
   padding: 20px;
 }
 
-.low-key-scrollbar {
-  /* Style the scrollbar for Chrome, Safari and Opera */
-  -webkit-scrollbar {
-    width: 8px;
-  }
-
-  -webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.4);
-  }
-
-  /* Style the scrollbar for Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 10;
+  padding: 10px 20px;
 }

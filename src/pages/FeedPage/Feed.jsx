@@ -1,5 +1,5 @@
-import { List, Card, Image } from "antd";
-import { InstagramOutlined } from "@ant-design/icons";
+import { Button, List, Card, Image, Space } from "antd";
+import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
 import "./feed.css";
 
 export default function Feed() {
@@ -16,11 +16,41 @@ export default function Feed() {
     },
   ];
 
+  const handleMakePost = () => {
+    console.log("Make Post button clicked!");
+  };
+
   return (
     <div className="feed-container">
-      <h1>
-        <InstagramOutlined /> Memestagram
-      </h1>
+      <div className="navbar">
+        <Space
+          align="center"
+          size="large"
+          style={{
+            width: "100%",
+            justifyContent: "space-between",
+            align: "center",
+          }}
+        >
+          <h1
+            style={{
+              margin: 0,
+              color: "black",
+            }}
+          >
+            <InstagramOutlined /> Memestagram
+          </h1>
+
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleMakePost}
+          />
+        </Space>
+      </div>
+
       <List
         itemLayout="vertical"
         size="large"
