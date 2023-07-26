@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../../utils/userService";
 import { Form, Input, Button, Card, Upload, Avatar, message } from "antd";
@@ -8,9 +8,6 @@ import {
   LockOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { set } from "mongoose";
-
-const { TextArea } = Input;
 
 export default function SignupPage({ onSignupOrLogin }) {
   const navigate = useNavigate();
@@ -24,6 +21,31 @@ export default function SignupPage({ onSignupOrLogin }) {
   const [file, setFile] = useState(null); // for antd upload
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // use effect to use message.loading from antd with loading state
+  useEffect(() => {
+    // Initialize a variable to hold the function that hides the loading message.
+    let hideLoadingMessage;
+
+    // Check if the 'loading' state is true.
+    if (loading) {
+      // If true, display the loading message and store the function that can hide it.
+      hideLoadingMessage = message.loading("Signing up...", 0);
+    } else if (hideLoadingMessage) {
+      // If 'loading' is false and 'hideLoadingMessage' is defined, then hide the loading message.
+      hideLoadingMessage();
+    }
+
+    // Return a cleanup function.
+    return () => {
+      // This cleanup function will be called when the component is unmounted.
+      // It ensures that if the component is unmounted while the loading message is still visible,
+      // the message will be hidden to prevent potential memory leaks or errors.
+      if (hideLoadingMessage) {
+        hideLoadingMessage();
+      }
+    };
+  }, [loading]); // This effect runs every time the 'loading' state changes.
 
   function beforeUpload(file) {
     // is the fie type an image?
@@ -62,14 +84,12 @@ export default function SignupPage({ onSignupOrLogin }) {
   }
 
   async function handleSubmit(values) {
-    message.loading("Signing up...", 0);
-
     const formData = new FormData();
     for (let key in formObj) {
       formData.append(key, formObj[key]);
     }
     if (file) {
-      formData.append("image", file);
+      formData.append("photo", file);
     }
     setLoading(true);
     console.log("Received values of form: ", values);
@@ -81,8 +101,9 @@ export default function SignupPage({ onSignupOrLogin }) {
       console.log(err, "err in handlesubmit");
       message.error(err.message);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
