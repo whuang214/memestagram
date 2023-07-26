@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Form, Input, Button, Card } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  InstagramOutlined,
+} from "@ant-design/icons";
 import UserService from "../../utils/userService";
 import "../LoginPage.css";
 
@@ -39,7 +43,17 @@ export default function LoginPage({ onSignupOrLogin }) {
 
   return (
     <div className="login-container">
-      <Card title="Login" className="login-card">
+      <Card
+        title={
+          <span>
+            <InstagramOutlined
+              style={{ marginRight: "8px", fontSize: "24px" }}
+            />{" "}
+            Login
+          </span>
+        }
+        className="login-card"
+      >
         {error && <div className="error-message">{error}</div>}
         <Form
           name="normal_login"
@@ -82,6 +96,9 @@ export default function LoginPage({ onSignupOrLogin }) {
             </Button>
           </Form.Item>
         </Form>
+        <div className="signup-link">
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </div>
       </Card>
     </div>
   );

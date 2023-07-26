@@ -1,39 +1,46 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useState } from "react";
 import "./App.css";
 
-import Home from "./pages/HomePage/Home";
+import Feed from "./pages/FeedPage/Feed";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import userService from "./utils/userService";
 
 export default function App() {
-  const [userObj, setUserObj] = useState(userService.getUser());
-  console.log("userObj->", userObj);
+  const [user, setUser] = useState(userService.getUser());
+  console.log("user->", user);
 
   function handleSignupOrLogin() {
-    setUserObj(userService.getUser());
+    setUser(userService.getUser());
   }
 
   function handleLogout() {
     userService.logout();
-    setUserObj(null);
+    setUser(null);
+  }
+
+  // if there is no user than only render the following routes
+  if (!user) {
+    return (
+      <Routes>
+        <Route
+          path="/login"
+          element={<LoginPage onSignupOrLogin={handleSignupOrLogin} />}
+        />
+        <Route
+          path="/signup"
+          element={<SignupPage onSignupOrLogin={handleSignupOrLogin} />}
+        />
+        {/* Redirect if user is not logged in */}
+        <Route path="/*" element={<Navigate to="/login" />} />
+      </Routes>
+    );
   }
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={<Home user={userObj} onLogout={handleLogout} />}
-      />
-      <Route
-        path="/login"
-        element={<LoginPage onSignupOrLogin={handleSignupOrLogin} />}
-      />
-      <Route
-        path="/signup"
-        element={<SignupPage onSignupOrLogin={handleSignupOrLogin} />}
-      />
+      <Route path="/" element={<Feed user={user} />} />
     </Routes>
   );
 }

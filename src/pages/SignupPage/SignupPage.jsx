@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import UserService from "../../utils/userService";
 import { Form, Input, Button, Card, Upload, Avatar, message } from "antd";
 import {
@@ -7,6 +7,7 @@ import {
   MailOutlined,
   LockOutlined,
   UploadOutlined,
+  InstagramOutlined,
 } from "@ant-design/icons";
 
 export default function SignupPage({ onSignupOrLogin }) {
@@ -108,7 +109,17 @@ export default function SignupPage({ onSignupOrLogin }) {
 
   return (
     <div className="login-container">
-      <Card title="Signup" className="signup-card">
+      <Card
+        title={
+          <span>
+            <InstagramOutlined
+              style={{ marginRight: "8px", fontSize: "24px" }}
+            />{" "}
+            Signup
+          </span>
+        }
+        className="signup-card"
+      >
         {error && <div className="error-message">{error}</div>}
         <Form
           name="normal_signup"
@@ -205,6 +216,9 @@ export default function SignupPage({ onSignupOrLogin }) {
             </Button>
           </Form.Item>
         </Form>
+        <div className="signup-link">
+          Already have an account? <Link to="/login">Login</Link>
+        </div>
       </Card>
     </div>
   );
