@@ -11,6 +11,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 module.exports = {
   signup,
   login,
+  getProfile,
 };
 
 async function signup(req, res) {
@@ -76,6 +77,15 @@ async function login(req, res) {
     });
   } catch (err) {
     return res.status(401).json(err);
+  }
+}
+
+async function getProfile(req, res) {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(400).json(err);
   }
 }
 

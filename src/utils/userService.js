@@ -47,7 +47,7 @@ function login(creds) {
 
 // get user based on username
 function getProfile(username) {
-  // console.log("username", username);
+  console.log("username", username);
   return fetch(BASE_URL + username, {
     method: "GET",
     headers: new Headers({ "Content-Type": "application/json" }),
