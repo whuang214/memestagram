@@ -1,4 +1,4 @@
-import { Button, List, Card, Image, Space, message } from "antd";
+import { Button, List, Card, Image, Space, Avatar, message } from "antd";
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import PostForm from "../../components/PostForm/PostForm";
@@ -6,35 +6,48 @@ import * as postService from "../../utils/postService";
 import "./feed.css";
 
 export default function Feed() {
+  /* example data
+  const users = [
+    {
+      _id: "1",
+      username: "User1",
+      email: "user1@example.com",
+      photoUrl: "https://via.placeholder.com/50",
+    },
+    {
+      _id: "2",
+      username: "User2",
+      email: "user2@example.com",
+      photoUrl: "https://via.placeholder.com/50",
+    },
+  ];
+
   const [posts, setPosts] = useState([
     {
-      title: "Post 1",
-      content: "This is the content for post 1.",
-      imageUrl: "https://via.placeholder.com/500", // placeholder image
+      user: users[0],
+      photoUrl: "https://via.placeholder.com/500",
+      caption: "This is the content for post 1.",
     },
     {
-      title: "Post 2",
-      content: "This is the content for post 2.",
-      imageUrl: "https://via.placeholder.com/500",
+      user: users[1],
+      photoUrl: "https://via.placeholder.com/500",
+      caption: "This is the content for post 2.",
     },
   ]);
-  const [err, setErr] = useState("");
+  */
+  const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const togglePostModal = () => {
-    if (isModalVisible) {
-      setIsModalVisible(false);
-    } else {
-      setIsModalVisible(true);
-    }
+    setIsModalVisible(!isModalVisible);
   };
 
   const handlePostSubmit = async (values) => {
-    // make a post request to the back-end
-    // console.log(values, "<- values in handlePostSubmit");
     try {
       const newPost = await postService.create(values);
-      // console.log(newPost, "<- newPost in handlePostSubmit");
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
+      setIsModalVisible(false); // close modal
+      message.success("Post created successfully!");
     } catch (err) {
       console.log(err, "<- err in submitting a post");
       message.error(err.message);
@@ -76,11 +89,18 @@ export default function Feed() {
         itemLayout="vertical"
         size="large"
         dataSource={posts}
-        renderItem={(item) => (
+        renderItem={(post) => (
           <List.Item>
-            <Card title={item.title}>
-              <Image src={item.imageUrl} alt={item.title} width={500} />
-              <p>{item.content}</p>
+            <Card
+              title={
+                <Space>
+                  <Avatar src={post.user.photoUrl} alt={post.user.username} />
+                  {post.user.username}
+                </Space>
+              }
+            >
+              <Image src={post.photoUrl} alt={post.caption} width={500} />
+              <p>{post.caption}</p>
             </Card>
           </List.Item>
         )}

@@ -9,7 +9,7 @@ import userService from "./utils/userService";
 
 export default function App() {
   const [user, setUser] = useState(userService.getUser());
-  console.log("user->", user);
+  // console.log("user->", user);
 
   function handleSignupOrLogin() {
     setUser(userService.getUser());
