@@ -2,6 +2,7 @@ import { Button, List, Card, Image, Space } from "antd";
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import PostForm from "../../components/PostForm/PostForm";
+import * as postService from "../../utils/postService";
 import "./feed.css";
 
 export default function Feed() {
@@ -28,9 +29,15 @@ export default function Feed() {
     }
   };
 
-  const handlePostSubmit = (values) => {
-    console.log(values);
+  const handlePostSubmit = async (values) => {
     // make a post request to the back-end
+    try {
+      const newPost = await postService.create(values);
+      // console.log(newPost, "<- newPost in handlePostSubmit");
+    } catch (err) {
+      console.log(err, "<- err in handlePostSubmit");
+      setErr(err.message);
+    }
   };
 
   return (
