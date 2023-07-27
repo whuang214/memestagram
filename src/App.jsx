@@ -5,6 +5,7 @@ import "./App.css";
 import Feed from "./pages/FeedPage/Feed";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignupPage from "./pages/SignupPage/SignupPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import userService from "./utils/userService";
 
 export default function App() {
@@ -38,9 +39,14 @@ export default function App() {
     );
   }
 
+  // if there is a user than render the following routes
   return (
     <Routes>
-      <Route path="/*" element={<Feed user={user} onLogout={handleLogout} />} />
+      <Route path="/" element={<Feed user={user} onLogout={handleLogout} />} />
+      <Route path="/user">
+        <Route path=":username" element={<ProfilePage />} />
+      </Route>
+      <Route path="/*" element={<h1>Error: 404 Not Found</h1>} />
     </Routes>
   );
 }

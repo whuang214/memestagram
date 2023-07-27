@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { List, Card, Image, Space, Avatar, message } from "antd";
 import NavBar from "../../components/NavBar/NavBar";
@@ -90,7 +91,9 @@ export default function Feed({ onLogout }) {
               title={
                 <Space>
                   <Avatar src={post.user.photoUrl} alt={post.user.username} />
-                  {post.user.username}
+                  <Link to={`/user/${post.user.username}`}>
+                    {post.user.username}
+                  </Link>
                   <small>{moment(post.createdAt).fromNow()}</small>
                 </Space>
               }

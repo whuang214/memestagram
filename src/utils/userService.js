@@ -45,4 +45,17 @@ function login(creds) {
     .then(({ token }) => tokenService.setToken(token));
 }
 
-export default { signup, getUser, logout, login };
+// get user based on username
+function getProfile(username) {
+  // console.log("username", username);
+  return fetch(BASE_URL + username, {
+    method: "GET",
+    headers: new Headers({ "Content-Type": "application/json" }),
+  }).then((res) => {
+    // Valid login if we have a status of 2xx (res.ok)
+    if (res.ok) return res.json();
+    throw new Error("Something went wrong!");
+  });
+}
+
+export default { signup, getUser, logout, login, getProfile };
