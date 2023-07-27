@@ -30,6 +30,7 @@ export default function Feed() {
 
   const handlePostSubmit = (values) => {
     console.log(values);
+    // make a post request to the back-end
   };
 
   return (

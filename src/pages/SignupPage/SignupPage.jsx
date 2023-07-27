@@ -10,6 +10,7 @@ import {
   InstagramOutlined,
 } from "@ant-design/icons";
 
+// todo - file uploading to be like PostForm.jsx
 export default function SignupPage({ onSignupOrLogin }) {
   const navigate = useNavigate();
 
@@ -93,7 +94,8 @@ export default function SignupPage({ onSignupOrLogin }) {
       formData.append("photo", file);
     }
     setLoading(true);
-    console.log("Received values of form: ", values);
+    // console.log("Received values of form: ", values);
+    console.log(formData);
     try {
       const user = await UserService.signup(formData);
       onSignupOrLogin();

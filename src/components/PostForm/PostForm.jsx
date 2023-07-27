@@ -8,9 +8,12 @@ export default function PostFormModal({ isModelOpen, onCancel, onPostSubmit }) {
 
   // when users click on the submit button
   const handleOk = async () => {
-    const values = await form.validateFields();
-    onPostSubmit(values);
-    form.resetFields();
+    const formData = new FormData();
+    formData.append("caption", caption);
+    formData.append("image", fileList[0]);
+    onPostSubmit(formData);
+    setFileList([]);
+    setCaption("");
   };
 
   // handle input change
