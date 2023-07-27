@@ -22,7 +22,7 @@ function create(req, res) {
   // create the object that we will send to S3
   const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
 
-  s3.upload = s3.upload(params, async function (err, data) {
+  s3.upload(params, async function (err, data) {
     if (err) {
       console.log("===============================");
       console.log(
@@ -48,4 +48,15 @@ function create(req, res) {
   });
 }
 
-async function index(req, res) {}
+// return all posts
+async function index(req, res) {
+  try {
+    const posts = await Post.find({})
+      .sort({ createdAt: "desc" })
+      .populate("user")
+      .exec();
+    res.status(200).json({ data: posts });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+}

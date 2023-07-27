@@ -1,9 +1,13 @@
+import { useState, useEffect } from "react";
+
 import { Button, List, Card, Image, Space, Avatar, message } from "antd";
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+
+import "./feed.css";
+
 import PostForm from "../../components/PostForm/PostForm";
 import * as postService from "../../utils/postService";
-import "./feed.css";
+import moment from "moment"; // for displaying the time
 
 export default function Feed() {
   /* example data
@@ -38,19 +42,17 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const posts = await postService.getAll();
-        console.log(posts, "<- posts");
-        // setPosts(posts);
-      } catch (err) {
-        console.log(err, "<- err in fetching posts");
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const fetchPosts = async () => {
+    try {
+      message.loading("Fetching posts...");
+      const posts = await postService.getAll();
+      console.log(posts, "<- posts");
+      setPosts(posts.data);
+      message.destroy(); // destroy loading message
+    } catch (err) {
+      console.log(err, "<- err in fetching posts");
+    }
+  };
 
   const togglePostModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -58,15 +60,21 @@ export default function Feed() {
 
   const handlePostSubmit = async (values) => {
     try {
-      const newPost = await postService.create(values);
-      setPosts((prevPosts) => [newPost, ...prevPosts]);
       setIsModalVisible(false); // close modal
+      message.loading("Creating post...");
+      const newPost = await postService.create(values);
+      message.destroy(); // destroy loading message
+      setPosts([newPost.data, ...posts]); // update posts
       message.success("Post created successfully!");
     } catch (err) {
       console.log(err, "<- err in submitting a post");
       message.error(err.message);
     }
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   return (
     <div className="feed-container">
@@ -110,6 +118,7 @@ export default function Feed() {
                 <Space>
                   <Avatar src={post.user.photoUrl} alt={post.user.username} />
                   {post.user.username}
+                  <small>{moment(post.createdAt).fromNow()}</small>
                 </Space>
               }
             >
