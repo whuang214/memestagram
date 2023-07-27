@@ -21,4 +21,18 @@ export function create(data) {
 }
 
 // MAKE A GET REQUEST
-export function getAll() {}
+export function getAll() {
+  return fetch(BASE_URL, {
+    method: "GET",
+    headers: {
+      // convention to include the token in the header of a request
+      // so that the server can verify the request
+      Authorization: "Bearer " + tokenService.getToken(),
+    },
+  }).then((res) => {
+    // if the response is okay, return the json data from the response
+    if (res.ok) return res.json();
+    // else throw an error
+    throw new Error("Something went wrong in getAll posts");
+  });
+}

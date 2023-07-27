@@ -1,6 +1,6 @@
 import { Button, List, Card, Image, Space, Avatar, message } from "antd";
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostForm from "../../components/PostForm/PostForm";
 import * as postService from "../../utils/postService";
 import "./feed.css";
@@ -37,6 +37,20 @@ export default function Feed() {
   */
   const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const posts = await postService.getAll();
+        console.log(posts, "<- posts");
+        // setPosts(posts);
+      } catch (err) {
+        console.log(err, "<- err in fetching posts");
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const togglePostModal = () => {
     setIsModalVisible(!isModalVisible);
