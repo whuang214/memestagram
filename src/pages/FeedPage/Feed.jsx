@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import { Button, List, Card, Image, Space, Avatar, message } from "antd";
-import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
+import { List, Card, Image, Space, Avatar, message } from "antd";
+import NavBar from "../../components/NavBar/NavBar";
 
 import "./feed.css";
 
@@ -9,7 +9,7 @@ import PostForm from "../../components/PostForm/PostForm";
 import * as postService from "../../utils/postService";
 import moment from "moment"; // for displaying the time
 
-export default function Feed() {
+export default function Feed({ onLogout }) {
   /* example data
   const users = [
     {
@@ -78,34 +78,7 @@ export default function Feed() {
 
   return (
     <div className="feed-container">
-      <div className="navbar">
-        <Space
-          align="center"
-          size="large"
-          style={{
-            width: "100%",
-            justifyContent: "space-between",
-            align: "center",
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              color: "black",
-            }}
-          >
-            <InstagramOutlined /> Memestagram
-          </h1>
-
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={togglePostModal}
-          />
-        </Space>
-      </div>
+      <NavBar onAddPost={togglePostModal} onLogout={onLogout} />
 
       <List
         itemLayout="vertical"
