@@ -1,9 +1,11 @@
 import { Button, List, Card, Image, Space } from "antd";
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import PostForm from "../../components/PostForm/PostForm";
 import "./feed.css";
 
 export default function Feed() {
-  const sampleData = [
+  const [posts, setPosts] = useState([
     {
       title: "Post 1",
       content: "This is the content for post 1.",
@@ -14,10 +16,20 @@ export default function Feed() {
       content: "This is the content for post 2.",
       imageUrl: "https://via.placeholder.com/500",
     },
-  ];
+  ]);
+  const [err, setErr] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const handleMakePost = () => {
-    console.log("Make Post button clicked!");
+  const togglePostModal = () => {
+    if (isModalVisible) {
+      setIsModalVisible(false);
+    } else {
+      setIsModalVisible(true);
+    }
+  };
+
+  const handlePostSubmit = (values) => {
+    console.log(values);
   };
 
   return (
@@ -46,7 +58,7 @@ export default function Feed() {
             shape="circle"
             icon={<PlusOutlined />}
             size="large"
-            onClick={handleMakePost}
+            onClick={togglePostModal}
           />
         </Space>
       </div>
@@ -54,7 +66,7 @@ export default function Feed() {
       <List
         itemLayout="vertical"
         size="large"
-        dataSource={sampleData}
+        dataSource={posts}
         renderItem={(item) => (
           <List.Item>
             <Card title={item.title}>
@@ -63,6 +75,12 @@ export default function Feed() {
             </Card>
           </List.Item>
         )}
+      />
+
+      <PostForm
+        isModelOpen={isModalVisible}
+        onCancel={togglePostModal}
+        onPostSubmit={handlePostSubmit}
       />
     </div>
   );
