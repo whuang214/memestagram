@@ -15,24 +15,20 @@ const app = express();
 app.use(logger("dev"));
 app.use(express.json());
 
-
 // Configure the auth middleware
 // This decodes the jwt token, and assigns
 // the user information to req.user
 app.use(require("./config/auth"));
 // api routes must be before the "catch all" route
 app.use("/api/users", require("./routes/api/users"));
+app.use("/api/posts", require("./routes/api/posts"));
 
 // "catch all" route
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-
 const port = process.env.PORT || 3001;
-
-
-
 
 const { PORT = 8000 } = process.env;
 app.listen(PORT, () => {

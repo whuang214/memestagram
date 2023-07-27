@@ -3,17 +3,19 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
 export default function PostFormModal({ isModelOpen, onCancel, onPostSubmit }) {
-  const [caption, setCaption] = useState("");
+  const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]); // for antd upload
 
   // when users click on the submit button
   const handleOk = async () => {
+    const values = await form.validateFields();
+    console.log(fileList[0].originFileObj, "<- file we are sending");
     const formData = new FormData();
-    formData.append("caption", caption);
-    formData.append("image", fileList[0]);
+    formData.append("caption", form.getFieldValue("caption"));
+    formData.append("photo", fileList[0].originFileObj);
     onPostSubmit(formData);
+    form.resetFields();
     setFileList([]);
-    setCaption("");
   };
 
   // handle input change
@@ -22,26 +24,33 @@ export default function PostFormModal({ isModelOpen, onCancel, onPostSubmit }) {
   };
 
   function beforeUpload(file) {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file types!");
-      return false;
+    if (fileList.length > 0) {
+      message.info("File replaced!");
+      setFileList([]);
     }
-    message.success("Image uploaded successfully!");
-    setFileList([file]);
-
     return false; // Prevent automatic upload since we'll handle it ourselves
   }
 
   const handleFileChange = (info) => {
     const { file } = info;
 
-    console.log(file);
-    if (file.status === "removed") {
-      setFileList([]);
-      message.success(`file removed`);
-    } else if (file.status === "error") {
-      message.error(`${file.name} file upload failed.`);
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG file types!");
+    }
+    // else if (file.size / 1024 / 1024 > 2) {
+    //   message.error("Image must be smaller than 2MB!");
+    // }
+    else {
+      setFileList([...info.fileList]); // set the fileList
+
+      console.log(file);
+      if (file.status === "removed") {
+        setFileList([]);
+        message.success(`file removed`);
+      } else if (file.status === "error") {
+        message.error(`${file.name} file upload failed.`);
+      }
     }
   };
 
@@ -52,17 +61,7 @@ export default function PostFormModal({ isModelOpen, onCancel, onPostSubmit }) {
       onOk={handleOk}
       onCancel={onCancel}
     >
-      <Form>
-        <Form.Item
-          label="Caption"
-          name="caption"
-          value={caption}
-          onChange={handleCaptionChange}
-          rules={[{ required: true, message: "Please input the caption!" }]}
-        >
-          <Input />
-        </Form.Item>
-
+      <Form form={form}>
         <Form.Item
           label="Upload Image"
           rules={[{ required: true, message: "Please upload the image!" }]}
@@ -71,12 +70,21 @@ export default function PostFormModal({ isModelOpen, onCancel, onPostSubmit }) {
             name="image"
             listType="picture"
             showUploadList={true}
+            multiple={false}
+            accept=".jpg,.jpeg,.png"
             beforeUpload={beforeUpload}
             onChange={handleFileChange}
             fileList={fileList}
           >
             <Button icon={<UploadOutlined />}>Click to upload an Image</Button>
           </Upload>
+        </Form.Item>
+        <Form.Item
+          label="Caption"
+          name="caption"
+          rules={[{ required: true, message: "Please input the caption!" }]}
+        >
+          <Input placeholder="Enter caption" />
         </Form.Item>
       </Form>
     </Modal>
