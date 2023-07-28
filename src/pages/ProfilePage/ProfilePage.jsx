@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Typography, List, Image } from "antd";
+import { Typography, List } from "antd";
 
 import NavBar from "../../components/NavBar/NavBar";
 import UserProfile from "../../components/UserProfile/UserProfile";
@@ -44,7 +44,7 @@ export default function ProfilePage({ currentUser, onLogout }) {
   return (
     <>
       <NavBar currentUser={currentUser} />
-      <div style={{ padding: "20px", textAlign: "center" }}>
+      <div style={{ padding: "20px", textAlign: "center", marginTop: "260px" }}>
         <UserProfile user={user} />
 
         {/* User Posts */}

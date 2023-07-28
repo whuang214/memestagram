@@ -1,9 +1,9 @@
-import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
+import { InstagramOutlined } from "@ant-design/icons";
 import userService from "../../utils/userService";
 import { Button, Space } from "antd";
 import { Link } from "react-router-dom";
 
-export default function NavBar({ currentUser, onAddPost }) {
+export default function NavBar({ currentUser }) {
   return (
     <div className="navbar">
       <Space
@@ -22,13 +22,6 @@ export default function NavBar({ currentUser, onAddPost }) {
         </h1>
 
         <div>
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<PlusOutlined />}
-            size="large"
-            onClick={onAddPost}
-          />
           <Link to={`/user/${currentUser.username}`}>Profile</Link>
           <Button
             type="link"

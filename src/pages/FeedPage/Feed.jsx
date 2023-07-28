@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { List, Card, Image, Space, Avatar, message } from "antd";
+import { List, message } from "antd";
 
 import NavBar from "../../components/NavBar/NavBar";
 import PostForm from "../../components/PostForm/PostForm";
 import FeedPostCard from "../../components/PostCard/FeedPostCard";
+import AddPostButton from "../../components/PostForm/AddPostButton";
 import postService from "../../utils/postService";
-
-import moment from "moment"; // for displaying the time
 
 import "./feed.css";
 
@@ -98,6 +96,8 @@ export default function Feed({ currentUser }) {
         onCancel={togglePostModal}
         onPostSubmit={handlePostSubmit}
       />
+
+      <AddPostButton onClick={togglePostModal} />
     </div>
   );
 }
