@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, List } from "antd";
+import { Typography, List, message } from "antd";
 
 import NavBar from "../../components/NavBar/NavBar";
 import UserProfile from "../../components/UserProfile/UserProfile";
@@ -39,10 +39,20 @@ export default function ProfilePage({ currentUser, onLogout }) {
     getUserAndPosts();
   }, [username]); // Ensure that the useEffect reruns if the username parameter changes
 
-  if (!user) return <p>Loading...</p>;
+  // if not loaded yet run message.loading and stop after
+  if (!user) {
+    return (
+      <>
+        <NavBar currentUser={currentUser} />
+        {message.loading("Loading...")}
+        <p>Loading...</p>
+      </>
+    );
+  }
 
   return (
     <>
+      {message.destroy()}
       <NavBar currentUser={currentUser} />
       <div style={{ padding: "20px", textAlign: "center", marginTop: "260px" }}>
         <UserProfile user={user} />
