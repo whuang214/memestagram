@@ -6,6 +6,7 @@ import PostForm from "../../components/PostForm/PostForm";
 import FeedPostCard from "../../components/PostCard/FeedPostCard";
 import AddPostButton from "../../components/PostForm/AddPostButton";
 import postService from "../../utils/postService";
+import likeService from "../../utils/likeService";
 
 import "./feed.css";
 
@@ -17,7 +18,7 @@ export default function Feed({ currentUser }) {
     try {
       message.loading("Fetching posts...");
       const posts = await postService.getAll();
-      console.log(posts, "<- posts");
+      // console.log(posts, "<- posts");
       setPosts(posts.data);
       message.destroy(); // destroy loading message
     } catch (err) {
@@ -27,6 +28,23 @@ export default function Feed({ currentUser }) {
 
   const togglePostModal = () => {
     setIsModalVisible(!isModalVisible);
+  };
+
+  const handleLike = async (postId, likeBoolean) => {
+    try {
+      if (likeBoolean) {
+        message.loading("Liking post...");
+        await likeService.addLike(postId);
+      }
+      if (!likeBoolean) {
+        message.loading("Unliking post...");
+        await likeService.removeLike(postId);
+      }
+      // update posts so the child component will re-render
+      fetchPosts();
+    } catch (err) {
+      console.log(err, "<- err in liking a post");
+    }
   };
 
   const handlePostSubmit = async (values) => {
@@ -57,7 +75,11 @@ export default function Feed({ currentUser }) {
         dataSource={posts}
         renderItem={(post) => (
           <List.Item>
-            <FeedPostCard post={post} />
+            <FeedPostCard
+              post={post}
+              currentUser={currentUser}
+              onLike={handleLike}
+            />
           </List.Item>
         )}
       />
