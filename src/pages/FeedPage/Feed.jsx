@@ -10,35 +10,6 @@ import postService from "../../utils/postService";
 import "./feed.css";
 
 export default function Feed({ currentUser }) {
-  /* example data
-  const users = [
-    {
-      _id: "1",
-      username: "User1",
-      email: "user1@example.com",
-      photoUrl: "https://via.placeholder.com/50",
-    },
-    {
-      _id: "2",
-      username: "User2",
-      email: "user2@example.com",
-      photoUrl: "https://via.placeholder.com/50",
-    },
-  ];
-
-  const [posts, setPosts] = useState([
-    {
-      user: users[0],
-      photoUrl: "https://via.placeholder.com/500",
-      caption: "This is the content for post 1.",
-    },
-    {
-      user: users[1],
-      photoUrl: "https://via.placeholder.com/500",
-      caption: "This is the content for post 2.",
-    },
-  ]);
-  */
   const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
