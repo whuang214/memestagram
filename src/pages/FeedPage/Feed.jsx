@@ -11,19 +11,20 @@ import likeService from "../../utils/likeService";
 import "./feed.css";
 
 export default function Feed({ currentUser }) {
+  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchPosts = async () => {
+    message.loading({ content: "Fetching posts...", key: "fetchingPosts" });
     try {
-      message.loading("Fetching posts...");
       const posts = await postService.getAll();
       // console.log(posts, "<- posts");
       setPosts(posts.data);
-      message.destroy(); // destroy loading message
     } catch (err) {
       console.log(err, "<- err in fetching posts");
     }
+    message.destroy("fetchingPosts"); // destroy loading message
   };
 
   const togglePostModal = () => {

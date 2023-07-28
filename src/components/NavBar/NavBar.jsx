@@ -1,7 +1,9 @@
 import { InstagramOutlined } from "@ant-design/icons";
 import userService from "../../utils/userService";
-import { Button, Space } from "antd";
+import { Avatar, Button, Space } from "antd";
 import { Link } from "react-router-dom";
+
+import "./navbar.css";
 
 export default function NavBar({ currentUser }) {
   return (
@@ -21,10 +23,19 @@ export default function NavBar({ currentUser }) {
           </Link>
         </h1>
 
-        <div>
-          <Link to={`/user/${currentUser.username}`}>Profile</Link>
+        <div className="navbar-right">
+          <div>
+            <Avatar src={currentUser.photoUrl} />
+            <span style={{ color: "black" }}>{currentUser.username}</span>
+          </div>
+          <Link to={`/user/${currentUser.username}`}>My Profile</Link>
           <Button
             type="link"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
             onClick={() => {
               userService.logout();
               window.location.reload();
