@@ -16,7 +16,7 @@ export default function Feed({ currentUser }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const fetchPosts = async () => {
-    message.loading({ content: "Fetching posts...", key: "fetchingPosts" });
+    message.loading({ content: "Refreshing posts...", key: "fetchingPosts" });
     try {
       const posts = await postService.getAll();
       // console.log(posts, "<- posts");
@@ -34,11 +34,11 @@ export default function Feed({ currentUser }) {
   const handleLike = async (postId, likeBoolean) => {
     try {
       if (likeBoolean) {
-        message.loading("Liking post...");
+        message.loading({ content: "Liking post...", key: "loadinglike" });
         await likeService.addLike(postId);
       }
       if (!likeBoolean) {
-        message.loading("Unliking post...");
+        message.loading({ content: "Unliking post...", key: "loadinglike" });
         await likeService.removeLike(postId);
       }
       // update posts so the child component will re-render
@@ -46,14 +46,15 @@ export default function Feed({ currentUser }) {
     } catch (err) {
       console.log(err, "<- err in liking a post");
     }
+    message.destroy("loadinglike"); // destroy loading message
   };
 
   const handlePostSubmit = async (values) => {
     try {
       setIsModalVisible(false); // close modal
-      message.loading("Creating post...");
+      message.loading({ content: "Creating post...", key: "creatingPost" });
       const newPost = await postService.create(values);
-      message.destroy(); // destroy loading message
+      message.destroy("creatingPost"); // destroy loading message
       setPosts([newPost.data, ...posts]); // update posts
       message.success("Post created successfully!");
     } catch (err) {
