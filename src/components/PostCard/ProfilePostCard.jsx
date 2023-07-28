@@ -17,10 +17,10 @@ export default function ProfilePostCard({ post }) {
           }}
         />
         <Typography.Paragraph>{post.caption}</Typography.Paragraph>
-        <small>Created {moment(post.createdAt).fromNow()}</small>
         <p>
           {post.likes.length} <HeartTwoTone />
         </p>
+        <small>Created {moment(post.createdAt).fromNow()}</small>
       </Card>
     </List.Item>
   );
