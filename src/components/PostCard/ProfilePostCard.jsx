@@ -1,4 +1,5 @@
 import { Card, Image, List, Typography } from "antd";
+import { HeartTwoTone } from "@ant-design/icons";
 
 export default function ProfilePostCard({ post }) {
   return (
@@ -15,6 +16,9 @@ export default function ProfilePostCard({ post }) {
           }}
         />
         <Typography.Paragraph>{post.caption}</Typography.Paragraph>
+        <p>
+          {post.likes.length} <HeartTwoTone />
+        </p>
       </Card>
     </List.Item>
   );

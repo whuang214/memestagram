@@ -9,8 +9,10 @@ import ProfilePostCard from "../../components/PostCard/ProfilePostCard";
 
 import UserService from "../../utils/userService";
 import PostService from "../../utils/postService";
+import { set } from "mongoose";
 
 export default function ProfilePage({ currentUser, onLogout }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const { username } = useParams();
@@ -26,12 +28,16 @@ export default function ProfilePage({ currentUser, onLogout }) {
   useEffect(() => {
     async function getUserAndPosts() {
       try {
+        message.loading({ content: "Loading...", key: "loading" });
+        setIsLoading(true);
         const profile = await UserService.getProfile(username);
         const userPosts = await PostService.getUserPosts(profile._id);
-        console.log("profile->", profile);
-        console.log("userPosts->", userPosts);
+        // console.log("profile->", profile);
+        // console.log("userPosts->", userPosts);
         setUser(profile);
         setPosts(userPosts.data);
+        setIsLoading(false);
+        message.destroy("loading");
       } catch (err) {
         console.log(err, "<- err in getUserAndPosts");
       }
@@ -40,11 +46,10 @@ export default function ProfilePage({ currentUser, onLogout }) {
   }, [username]); // Ensure that the useEffect reruns if the username parameter changes
 
   // if not loaded yet run message.loading and stop after
-  if (!user) {
+  if (isLoading) {
     return (
       <>
         <NavBar currentUser={currentUser} />
-        {message.loading("Loading...")}
         <p>Loading...</p>
       </>
     );
