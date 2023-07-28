@@ -6,7 +6,6 @@ import moment from "moment";
 export default function FeedPostCard({ post, onLike, currentUser }) {
   // check if the current user has liked the post
   // some returns true if at least one element in the array satisfies the condition
-  // console.log(post.likes, "<- post.likes");
   const hasLiked = post.likes.some((like) => like._id === currentUser._id);
 
   return (
@@ -21,7 +20,10 @@ export default function FeedPostCard({ post, onLike, currentUser }) {
       actions={[
         <Space style={{ fontSize: "20px" }}>
           {hasLiked ? (
-            <HeartFilled onClick={() => onLike(post._id, !hasLiked)} />
+            <HeartFilled
+              style={{ color: "red" }}
+              onClick={() => onLike(post._id, !hasLiked)}
+            />
           ) : (
             <HeartOutlined onClick={() => onLike(post._id, !hasLiked)} />
           )}

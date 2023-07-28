@@ -4,7 +4,6 @@ const BASE_URL = "/api/likes";
 
 // POST /likes/:id/
 function addLike(postId) {
-  // console.log("creating like for post ->", postId);
   return fetch(`${BASE_URL}/${postId}`, {
     method: "POST",
     headers: {
