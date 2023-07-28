@@ -1,5 +1,6 @@
 import { Card, Image, List, Typography } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
+import moment from "moment";
 
 export default function ProfilePostCard({ post }) {
   return (
@@ -16,6 +17,7 @@ export default function ProfilePostCard({ post }) {
           }}
         />
         <Typography.Paragraph>{post.caption}</Typography.Paragraph>
+        <small>Created {moment(post.createdAt).fromNow()}</small>
         <p>
           {post.likes.length} <HeartTwoTone />
         </p>
