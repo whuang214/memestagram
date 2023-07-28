@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import { List, Card, Image, Space, Avatar, message } from "antd";
+
 import NavBar from "../../components/NavBar/NavBar";
+import PostForm from "../../components/PostForm/PostForm";
+import FeedPostCard from "../../components/PostCard/FeedPostCard";
+import postService from "../../utils/postService";
+
+import moment from "moment"; // for displaying the time
 
 import "./feed.css";
 
-import PostForm from "../../components/PostForm/PostForm";
-import PostService from "../../utils/postService";
-import moment from "moment"; // for displaying the time
-
-export default function Feed({ onLogout }) {
+export default function Feed({ currentUser }) {
   /* example data
   const users = [
     {
@@ -46,7 +47,7 @@ export default function Feed({ onLogout }) {
   const fetchPosts = async () => {
     try {
       message.loading("Fetching posts...");
-      const posts = await PostService.getAll();
+      const posts = await postService.getAll();
       console.log(posts, "<- posts");
       setPosts(posts.data);
       message.destroy(); // destroy loading message
@@ -79,7 +80,7 @@ export default function Feed({ onLogout }) {
 
   return (
     <div className="feed-container">
-      <NavBar onAddPost={togglePostModal} onLogout={onLogout} />
+      <NavBar currentUser={currentUser} onAddPost={togglePostModal} />
 
       <List
         itemLayout="vertical"
@@ -87,20 +88,7 @@ export default function Feed({ onLogout }) {
         dataSource={posts}
         renderItem={(post) => (
           <List.Item>
-            <Card
-              title={
-                <Space>
-                  <Avatar src={post.user.photoUrl} alt={post.user.username} />
-                  <Link to={`/user/${post.user.username}`}>
-                    {post.user.username}
-                  </Link>
-                  <small>{moment(post.createdAt).fromNow()}</small>
-                </Space>
-              }
-            >
-              <Image src={post.photoUrl} alt={post.caption} width={500} />
-              <p>{post.caption}</p>
-            </Card>
+            <FeedPostCard post={post} />
           </List.Item>
         )}
       />

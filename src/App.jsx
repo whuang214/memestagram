@@ -42,9 +42,12 @@ export default function App() {
   // if there is a user than render the following routes
   return (
     <Routes>
-      <Route path="/" element={<Feed user={user} onLogout={handleLogout} />} />
+      <Route
+        path="/"
+        element={<Feed currentUser={user} onLogout={handleLogout} />}
+      />
       <Route path="/user">
-        <Route path=":username" element={<ProfilePage />} />
+        <Route path=":username" element={<ProfilePage currentUser={user} />} />
       </Route>
       <Route path="/*" element={<h1>Error: 404 Not Found</h1>} />
     </Routes>

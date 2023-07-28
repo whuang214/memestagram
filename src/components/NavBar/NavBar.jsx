@@ -1,8 +1,9 @@
 import { InstagramOutlined, PlusOutlined } from "@ant-design/icons";
+import userService from "../../utils/userService";
 import { Button, Space } from "antd";
 import { Link } from "react-router-dom";
 
-export default function NavBar({ onAddPost, onLogout }) {
+export default function NavBar({ currentUser, onAddPost }) {
   return (
     <div className="navbar">
       <Space
@@ -14,13 +15,10 @@ export default function NavBar({ onAddPost, onLogout }) {
           align: "center",
         }}
       >
-        <h1
-          style={{
-            margin: 0,
-            color: "black",
-          }}
-        >
-          <InstagramOutlined /> Memestagram
+        <h1 style={{ margin: 0, color: "black" }}>
+          <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+            <InstagramOutlined /> Memestagram
+          </Link>
         </h1>
 
         <div>
@@ -31,8 +29,14 @@ export default function NavBar({ onAddPost, onLogout }) {
             size="large"
             onClick={onAddPost}
           />
-          <Link to="/profile">Profile</Link>
-          <Button type="link" onClick={onLogout}>
+          <Link to={`/user/${currentUser.username}`}>Profile</Link>
+          <Button
+            type="link"
+            onClick={() => {
+              userService.logout();
+              window.location.reload();
+            }}
+          >
             Logout
           </Button>
         </div>

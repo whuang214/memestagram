@@ -1,14 +1,27 @@
-import { Card, Avatar, Space, Typography, List, Image } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Card, Typography, List, Image } from "antd";
+
+import NavBar from "../../components/NavBar/NavBar";
+import UserProfile from "../../components/UserProfile/UserProfile";
+import PlaceholderCard from "../../components/PostCard/PlaceholderCard";
+import ProfilePostCard from "../../components/PostCard/ProfilePostCard";
+
 import UserService from "../../utils/userService";
 import PostService from "../../utils/postService";
-import moment from "moment";
 
-export default function ProfilePage() {
+export default function ProfilePage({ currentUser, onLogout }) {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const { username } = useParams();
+
+  // placeholder testing
+  const placeholderCount =
+    3 - (posts.length % 3) === 3 ? 0 : 3 - (posts.length % 3);
+  const placeholders = [...Array(placeholderCount)].map((_, idx) => ({
+    placeholderKey: idx,
+  }));
+  const displayItems = [...posts, ...placeholders]; // merge posts and placeholders
 
   useEffect(() => {
     async function getUserAndPosts() {
@@ -29,42 +42,33 @@ export default function ProfilePage() {
   if (!user) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      {/* User Details inside a Card */}
-      <Card
-        style={{
-          marginBottom: "30px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Avatar size={150} src={user.photoUrl} alt={user.username} />
-        <Typography.Title level={2}>{user.username}</Typography.Title>
-        <Typography.Text type="secondary">{user.email}</Typography.Text>
-        <Typography.Text style={{ display: "block", margin: "10px 0" }}>
-          Joined {moment(user.createdAt).format("MMM D, YYYY")}
-        </Typography.Text>
-      </Card>
+    <>
+      <NavBar currentUser={currentUser} />
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <UserProfile user={user} />
 
-      {/* User Posts */}
-      <div style={{ marginTop: "30px" }}>
-        <Typography.Title level={4}>Posts</Typography.Title>
-        <List
-          grid={{ gutter: 16, column: 3 }}
-          dataSource={posts}
-          renderItem={(post) => (
-            <List.Item>
-              <Card>
-                <Image
-                  src={post.photoUrl}
-                  alt={post.caption}
-                  style={{ maxHeight: "200px", objectFit: "cover" }}
-                />
-                <Typography.Paragraph>{post.caption}</Typography.Paragraph>
-              </Card>
-            </List.Item>
-          )}
-        />
+        {/* User Posts */}
+        <div style={{ marginTop: "30px" }}>
+          <Typography.Title
+            level={4}
+            style={{
+              color: "#fff",
+            }}
+          >
+            Posts
+          </Typography.Title>
+          <List
+            grid={{ gutter: 16, column: 3 }}
+            dataSource={displayItems}
+            renderItem={(item, index) => {
+              if (item?.placeholderKey !== undefined) {
+                return <PlaceholderCard placeholderKey={item.placeholderKey} />;
+              }
+              return <ProfilePostCard post={item} />;
+            }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
