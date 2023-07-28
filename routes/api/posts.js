@@ -9,5 +9,6 @@ const upload = multer();
 /*---------- Public Routes ----------*/
 router.post("/", upload.single("photo"), postsCtrl.create);
 router.get("/", postsCtrl.index);
+router.get("/:userId", postsCtrl.getUserPosts);
 
 module.exports = router;

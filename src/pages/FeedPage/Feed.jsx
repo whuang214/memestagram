@@ -7,7 +7,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import "./feed.css";
 
 import PostForm from "../../components/PostForm/PostForm";
-import * as postService from "../../utils/postService";
+import PostService from "../../utils/postService";
 import moment from "moment"; // for displaying the time
 
 export default function Feed({ onLogout }) {
@@ -46,7 +46,7 @@ export default function Feed({ onLogout }) {
   const fetchPosts = async () => {
     try {
       message.loading("Fetching posts...");
-      const posts = await postService.getAll();
+      const posts = await PostService.getAll();
       console.log(posts, "<- posts");
       setPosts(posts.data);
       message.destroy(); // destroy loading message

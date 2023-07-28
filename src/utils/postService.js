@@ -5,7 +5,7 @@ const BASE_URL = "/api/posts/";
 // getting the line app.use in server.js
 
 // MAKE A POST REQUEST
-export function create(data) {
+function create(data) {
   return fetch(BASE_URL, {
     method: "POST",
     body: data,
@@ -21,7 +21,7 @@ export function create(data) {
 }
 
 // MAKE A GET REQUEST
-export function getAll() {
+function getAll() {
   return fetch(BASE_URL, {
     method: "GET",
     headers: {
@@ -36,3 +36,18 @@ export function getAll() {
     throw new Error("Something went wrong in getAll posts");
   });
 }
+
+// make a get request to get a single post
+function getUserPosts(userId) {
+  return fetch(`${BASE_URL}${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + tokenService.getToken(),
+    },
+  }).then((res) => {
+    if (res.ok) return res.json();
+    throw new Error("Something went wrong in getUserPosts");
+  });
+}
+
+export default { create, getAll, getUserPosts };

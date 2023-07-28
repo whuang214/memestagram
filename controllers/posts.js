@@ -10,6 +10,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 module.exports = {
   create,
   index,
+  getUserPosts,
 };
 
 function create(req, res) {
@@ -52,6 +53,20 @@ function create(req, res) {
 async function index(req, res) {
   try {
     const posts = await Post.find({})
+      .sort({ createdAt: "desc" })
+      .populate("user")
+      .exec();
+    res.status(200).json({ data: posts });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+}
+
+// return all posts for a specific user
+async function getUserPosts(req, res) {
+  // console.log(req.params.userId, " < req.params.userId in getUserPosts");
+  try {
+    const posts = await Post.find({ user: req.params.userId })
       .sort({ createdAt: "desc" })
       .populate("user")
       .exec();
