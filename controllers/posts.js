@@ -11,6 +11,7 @@ module.exports = {
   create,
   index,
   getUserPosts,
+  deleteOne,
 };
 
 function create(req, res) {
@@ -73,5 +74,46 @@ async function getUserPosts(req, res) {
     res.status(200).json({ data: posts });
   } catch (err) {
     res.status(400).json({ error: err });
+  }
+}
+
+// delete a post
+async function deleteOne(req, res) {
+  try {
+    const post = await Post.findOne({ _id: req.params.id });
+
+    if (!post) {
+      return res.status(404).json({ error: "post not found" });
+    }
+
+    if (!post.user.equals(req.user._id)) {
+      return res.status(401).json({ error: "unauthorized" });
+    }
+
+    await post.remove();
+
+    const url = new URL(post.photoUrl);
+    const key = url.pathname.substring(1); // Removing the leading '/'
+
+    // console.log(key, " < key in deleteOne");
+
+    const params = {
+      Bucket: BUCKET_NAME,
+      Key: key,
+    };
+
+    s3.deleteObject(params, function (err, data) {
+      if (err) {
+        console.error("Error deleting from S3: ", err);
+        return res
+          .status(400)
+          .json({ error: "Failed to delete post from storage" });
+      }
+
+      return res.status(200).json({ data: "post removed" });
+    });
+  } catch (err) {
+    console.error("Error deleting post: ", err);
+    return res.status(400).json({ error: "Failed to delete post" });
   }
 }

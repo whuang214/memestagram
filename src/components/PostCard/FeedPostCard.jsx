@@ -6,7 +6,34 @@ import moment from "moment";
 export default function FeedPostCard({ post, onLike, onDelete, currentUser }) {
   // check if the current user has liked the post
   // some returns true if at least one element in the array satisfies the condition
-  const hasLiked = post.likes.some((like) => like._id === currentUser._id);
+  const hasLiked = post.likes.some(
+    (like) => like._id.toString() === currentUser._id.toString()
+  );
+
+  // Build the actions array
+  const actions = [
+    <Space style={{ fontSize: "20px" }}>
+      {hasLiked ? (
+        <HeartFilled
+          style={{ color: "red" }}
+          onClick={() => onLike(post._id, !hasLiked)}
+        />
+      ) : (
+        <HeartOutlined onClick={() => onLike(post._id, !hasLiked)} />
+      )}
+      <span>{post.likes.length}</span>
+    </Space>,
+  ];
+
+  // Conditionally add the delete icon
+  if (currentUser._id === post.user._id) {
+    actions.push(
+      <DeleteOutlined
+        style={{ fontSize: "20px" }}
+        onClick={() => onDelete(post._id)}
+      />
+    );
+  }
 
   return (
     <Card
@@ -17,23 +44,7 @@ export default function FeedPostCard({ post, onLike, onDelete, currentUser }) {
           <small>{moment(post.createdAt).fromNow()}</small>
         </Space>
       }
-      actions={[
-        <Space style={{ fontSize: "20px" }}>
-          {hasLiked ? (
-            <HeartFilled
-              style={{ color: "red" }}
-              onClick={() => onLike(post._id, !hasLiked)}
-            />
-          ) : (
-            <HeartOutlined onClick={() => onLike(post._id, !hasLiked)} />
-          )}
-          <span>{post.likes.length}</span>
-        </Space>,
-        <DeleteOutlined
-          style={{ fontSize: "20px" }}
-          onClick={() => onDelete(post._id)}
-        />,
-      ]}
+      actions={actions}
     >
       <Image
         style={{

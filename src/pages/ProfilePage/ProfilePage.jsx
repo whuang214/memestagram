@@ -15,21 +15,22 @@ export default function ProfilePage({ currentUser, onLogout }) {
   const [posts, setPosts] = useState([]);
   const { username } = useParams();
 
-  useEffect(() => {
-    async function getUserAndPosts() {
-      try {
-        message.loading({ content: "Loading...", key: "loading" });
-        setIsLoading(true);
-        const profile = await UserService.getProfile(username);
-        const userPosts = await PostService.getUserPosts(profile._id);
-        setUser(profile);
-        setPosts(userPosts.data);
-        setIsLoading(false);
-        message.destroy("loading");
-      } catch (err) {
-        console.log(err, "<- err in getUserAndPosts");
-      }
+  async function getUserAndPosts() {
+    try {
+      message.loading({ content: "Loading...", key: "loading" });
+      setIsLoading(true);
+      const profile = await UserService.getProfile(username);
+      const userPosts = await PostService.getUserPosts(profile._id);
+      setUser(profile);
+      setPosts(userPosts.data);
+      setIsLoading(false);
+      message.destroy("loading");
+    } catch (err) {
+      console.log(err, "<- err in getUserAndPosts");
     }
+  }
+
+  useEffect(() => {
     getUserAndPosts();
   }, [username]);
 
@@ -61,7 +62,13 @@ export default function ProfilePage({ currentUser, onLogout }) {
           <List
             grid={{ gutter: 16, column: 3 }}
             dataSource={posts}
-            renderItem={(item) => <ProfilePostCard post={item} />}
+            renderItem={(item) => (
+              <ProfilePostCard
+                post={item}
+                currentUser={currentUser}
+                fetchPosts={getUserAndPosts}
+              />
+            )}
           />
         </div>
       </div>
