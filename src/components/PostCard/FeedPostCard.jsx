@@ -1,9 +1,9 @@
 import { Card, Space, Avatar, Image } from "antd";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, DeleteOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
-export default function FeedPostCard({ post, onLike, currentUser }) {
+export default function FeedPostCard({ post, onLike, onDelete, currentUser }) {
   // check if the current user has liked the post
   // some returns true if at least one element in the array satisfies the condition
   const hasLiked = post.likes.some((like) => like._id === currentUser._id);
@@ -29,6 +29,10 @@ export default function FeedPostCard({ post, onLike, currentUser }) {
           )}
           <span>{post.likes.length}</span>
         </Space>,
+        <DeleteOutlined
+          style={{ fontSize: "20px" }}
+          onClick={() => onDelete(post._id)}
+        />,
       ]}
     >
       <Image

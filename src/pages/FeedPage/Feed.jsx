@@ -49,6 +49,18 @@ export default function Feed({ currentUser }) {
     message.destroy("loadinglike"); // destroy loading message
   };
 
+  const handleDelete = async (postId) => {
+    try {
+      message.loading({ content: "Deleting post...", key: "deletingPost" });
+      await postService.deletePost(postId);
+      fetchPosts();
+      message.success("Post deleted successfully!");
+    } catch (err) {
+      console.log(err, "<- err in deleting a post");
+    }
+    message.destroy("deletingPost"); // destroy loading message
+  };
+
   const handlePostSubmit = async (values) => {
     try {
       setIsModalVisible(false); // close modal
@@ -81,6 +93,7 @@ export default function Feed({ currentUser }) {
               post={post}
               currentUser={currentUser}
               onLike={handleLike}
+              onDelete={handleDelete}
             />
           </List.Item>
         )}

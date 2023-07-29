@@ -50,4 +50,18 @@ function getUserPosts(userId) {
   });
 }
 
-export default { create, getAll, getUserPosts };
+// delete a post
+function deletePost(postId) {
+  // console.log("Deleting post with id: ", postId);
+  return fetch(`${BASE_URL}${postId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + tokenService.getToken(),
+    },
+  }).then((res) => {
+    if (res.ok) return res.json();
+    throw new Error("Something went wrong in deletePost");
+  });
+}
+
+export default { create, getAll, getUserPosts, deletePost };
